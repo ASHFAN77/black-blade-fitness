@@ -202,6 +202,11 @@ async function initApp() {
   initWidgets();
   initScrollReveal();
   
+  if (!supabase) {
+    DOM.authError.innerHTML = `<span style="color: #ff3b30; font-weight: bold;">DATABASE SETUP REQUIRED</span><br><div style="font-size: 0.8rem; line-height: 1.4; margin-top: 5px; text-align: left; text-transform: none; color: #eee; font-family: sans-serif;">Missing database configuration. Please add <code>VITE_SUPABASE_URL</code> and <code>VITE_SUPABASE_ANON_KEY</code> to your Netlify Environment Variables (Site settings ➜ Environment variables) and trigger a new deploy.</div>`;
+    return;
+  }
+  
   // Track auth changes
   supabase.auth.onAuthStateChange(async (event, session) => {
     try {
