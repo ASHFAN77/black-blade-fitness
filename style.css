@@ -1,0 +1,1768 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Rajdhani:wght@500;600;700&display=swap');
+
+/* ==========================================================
+   CSS Custom Properties & Themes
+   ========================================================== */
+:root {
+  --font-header: 'Rajdhani', sans-serif;
+  --font-body: 'Outfit', sans-serif;
+  
+  /* Transition durations */
+  --transition-speed: 0.3s;
+}
+
+/* Dark Theme Variables (Black + Red Glow + Gold Borders) */
+html.dark {
+  --bg-color: #030303;
+  --text-primary: #ffffff;
+  --text-secondary: #aaaaaa;
+  --text-dim: #666666;
+  --accent-red: #ff1f1f;
+  --accent-red-glow: rgba(255, 31, 31, 0.65);
+  --accent-red-dim: rgba(255, 31, 31, 0.2);
+  --glass-bg: rgba(12, 12, 12, 0.75);
+  --glass-bg-hover: rgba(25, 15, 15, 0.85);
+  --border-color: rgba(212, 175, 55, 0.3); /* Premium Gold border */
+  --border-color-focus: rgba(212, 175, 55, 0.85); /* Active Gold */
+  --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.7);
+  --bg-overlay-gradient: linear-gradient(135deg, rgba(3, 3, 3, 0.93) 0%, rgba(20, 3, 3, 0.88) 100%);
+  --item-bg-completed: rgba(46, 204, 113, 0.15);
+  --item-border-completed: rgba(46, 204, 113, 0.5);
+  --item-text-completed: #2ecc71;
+  --item-bg-pending: rgba(255, 31, 31, 0.1);
+  --item-border-pending: rgba(255, 31, 31, 0.3);
+  --item-text-pending: #ff3b30;
+}
+
+/* Light Theme Variables (White + Red + Gold Borders) */
+html.light {
+  --bg-color: #f7f7f7;
+  --text-primary: #111111;
+  --text-secondary: #444444;
+  --text-dim: #888888;
+  --accent-red: #cc1111;
+  --accent-red-glow: rgba(204, 17, 17, 0.4);
+  --accent-red-dim: rgba(204, 17, 17, 0.15);
+  --glass-bg: rgba(255, 255, 255, 0.8);
+  --glass-bg-hover: rgba(255, 240, 240, 0.9);
+  --border-color: rgba(184, 134, 11, 0.35); /* Antique Gold border */
+  --border-color-focus: rgba(184, 134, 11, 0.85); /* Active Antique Gold */
+  --shadow: 0 8px 32px 0 rgba(204, 17, 17, 0.08);
+  --bg-overlay-gradient: linear-gradient(135deg, rgba(255, 255, 255, 0.93) 0%, rgba(255, 240, 240, 0.88) 100%);
+  --item-bg-completed: rgba(39, 174, 96, 0.15);
+  --item-border-completed: rgba(39, 174, 96, 0.6);
+  --item-text-completed: #27ae60;
+  --item-bg-pending: rgba(204, 17, 17, 0.08);
+  --item-border-pending: rgba(204, 17, 17, 0.3);
+  --item-text-pending: #cc1111;
+}
+
+/* ==========================================================
+   Reset & Base Styles
+   ========================================================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+  transition: background-color var(--transition-speed), color var(--transition-speed);
+}
+
+.font-header {
+  font-family: var(--font-header);
+  font-weight: 700;
+  letter-spacing: 1.5px;
+}
+
+.font-body {
+  font-family: var(--font-body);
+}
+
+/* ==========================================================
+   Background Parallax & Overlay
+   ========================================================== */
+.parallax-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('/background.jpg');
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+  z-index: -2;
+  transition: transform 0.1s ease-out;
+}
+
+.bg-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--bg-overlay-gradient);
+  z-index: -1;
+  transition: background var(--transition-speed);
+}
+
+/* ==========================================================
+   Glassmorphism Helper
+   ========================================================== */
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  transition: border-color var(--transition-speed), background-color var(--transition-speed), box-shadow var(--transition-speed);
+}
+
+.glow-text {
+  text-shadow: 0 0 10px var(--accent-red-glow);
+}
+
+/* ==========================================================
+   Auth Screen
+   ========================================================== */
+.overlay-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 16px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-speed) ease;
+}
+
+.overlay-panel.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.auth-overlay {
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 32px 24px;
+  text-align: center;
+}
+
+.brand-header {
+  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.brand-sword-logo {
+  width: 60px;
+  height: 60px;
+  color: var(--accent-red);
+  margin-bottom: 12px;
+  filter: drop-shadow(0 0 8px var(--accent-red-glow));
+  animation: swordPulse 3s ease-in-out infinite;
+}
+
+.sword-logo {
+  width: 100%;
+  height: 100%;
+}
+
+.brand-header h1 {
+  font-size: 2.5rem;
+  color: var(--accent-red);
+}
+
+.brand-header p {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  letter-spacing: 4px;
+  margin-top: 4px;
+}
+
+@keyframes swordPulse {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 8px var(--accent-red-glow)); }
+  50% { transform: scale(1.08); filter: drop-shadow(0 0 16px var(--accent-red-glow)); }
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  text-align: left;
+}
+
+.form-title {
+  font-size: 1.5rem;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  border-bottom: 2px solid var(--accent-red);
+  padding-bottom: 4px;
+  display: inline-block;
+  width: fit-content;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.input-group label {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+input, select, textarea {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border-color);
+  padding: 12px;
+  color: var(--text-primary);
+  border-radius: 6px;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
+}
+
+html.light input, html.light select, html.light textarea {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--border-color-focus);
+  box-shadow: 0 0 10px var(--accent-red-dim);
+}
+
+.btn {
+  border: none;
+  border-radius: 6px;
+  padding: 14px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color var(--transition-speed), transform 0.1s, box-shadow var(--transition-speed);
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-red {
+  background-color: var(--accent-red);
+  color: white;
+  box-shadow: 0 4px 14px 0 var(--accent-red-dim);
+}
+
+.btn-red:hover {
+  background-color: #ff3b30;
+  box-shadow: 0 0 20px var(--accent-red-glow);
+}
+
+.btn-red:active {
+  transform: scale(0.98);
+}
+
+.btn-outline {
+  background-color: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+.btn-outline:hover {
+  background-color: var(--accent-red-dim);
+  border-color: var(--border-color-focus);
+}
+
+.btn-small {
+  padding: 8px 12px;
+  font-size: 0.8rem;
+  align-self: flex-start;
+  background-color: rgba(255, 31, 31, 0.1);
+  color: var(--accent-red);
+  border: 1px dashed var(--accent-red);
+}
+
+.btn-small:hover {
+  background-color: var(--accent-red);
+  color: white;
+}
+
+.auth-toggle {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  text-align: center;
+  margin-top: 12px;
+}
+
+.auth-toggle span {
+  color: var(--accent-red);
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.auth-toggle span:hover {
+  text-decoration: underline;
+}
+
+.auth-error {
+  color: var(--accent-red);
+  font-size: 0.85rem;
+  margin-top: 12px;
+  min-height: 18px;
+  text-align: center;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* ==========================================================
+   App Shell Layout
+   ========================================================== */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  position: relative;
+}
+
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  border-radius: 0;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  height: 60px;
+}
+
+.app-title-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-grow: 1;
+}
+
+.sword-icon {
+  width: 28px;
+  height: 28px;
+  color: var(--accent-red);
+  filter: drop-shadow(0 0 5px var(--accent-red-glow));
+}
+
+.app-title {
+  font-size: 1.5rem;
+  color: var(--accent-red);
+  text-transform: uppercase;
+  text-align: center;
+}
+
+/* Widgets Top Left */
+.top-left-widgets {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+}
+
+.widget-btn {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 6px 10px;
+  color: var(--text-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background var(--transition-speed), border-color var(--transition-speed);
+}
+
+html.light .widget-btn {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.widget-btn:hover {
+  background: var(--accent-red-dim);
+  border-color: var(--border-color-focus);
+}
+
+.widget-btn .icon {
+  width: 16px;
+  height: 16px;
+}
+
+.widget-text {
+  font-size: 0.85rem;
+}
+
+/* Profile Circle Top Right */
+.profile-circle-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  position: relative;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  max-width: 40px;
+}
+
+.avatar-ring {
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border: 2px solid var(--border-color);
+  border-radius: 50%;
+  animation: rotateGlow 8s linear infinite;
+}
+
+.profile-circle-btn:hover .avatar-ring {
+  border-color: var(--accent-red-focus);
+  box-shadow: 0 0 10px var(--accent-red-glow);
+}
+
+.profile-circle-btn img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid rgba(255,255,255,0.2);
+}
+
+@keyframes rotateGlow {
+  0% { transform: rotate(0deg); border-color: var(--border-color); }
+  50% { border-color: var(--accent-red); }
+  100% { transform: rotate(360deg); border-color: var(--border-color); }
+}
+
+/* ==========================================================
+   Viewport Panels
+   ========================================================== */
+.app-viewport {
+  flex-grow: 1;
+  padding: 16px;
+  padding-bottom: 90px; /* Space for footer dock */
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  overflow-y: auto;
+}
+
+.viewport-panel {
+  display: none;
+  animation: fadeIn 0.4s ease forwards;
+}
+
+.viewport-panel.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================
+   1. WORKOUT PANEL (Muscle Grid & Cropping)
+   ========================================================== */
+.muscle-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px; /* Larger gap between boxes */
+  margin-top: 8px;
+}
+
+@media (max-width: 768px) {
+  .muscle-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .muscle-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.muscle-box {
+  height: 180px;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  border-radius: 8px;
+}
+
+.muscle-box:hover {
+  border-color: var(--border-color-focus);
+  box-shadow: 0 0 15px var(--accent-red-dim);
+}
+
+.muscle-crop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('/character_profile.jpg');
+  filter: grayscale(80%) brightness(0.65) contrast(1.1);
+  transition: filter 0.6s cubic-bezier(0.165, 0.84, 0.44, 1), transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+  z-index: 1;
+}
+
+html.light .muscle-crop {
+  filter: grayscale(40%) brightness(0.9) contrast(1.0);
+}
+
+.muscle-box:hover .muscle-crop,
+.muscle-box.reveal-visible .muscle-crop {
+  filter: grayscale(0%) brightness(0.95) contrast(1.2);
+  transform: scale(1.08);
+}
+
+.muscle-label {
+  position: relative;
+  z-index: 2;
+  background: rgba(0, 0, 0, 0.85);
+  border-top: 1px solid var(--border-color);
+  width: 100%;
+  text-align: center;
+  padding: 10px;
+  font-size: 1.1rem;
+  color: white;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+              transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+              background var(--transition-speed), 
+              color var(--transition-speed);
+}
+
+.muscle-box:hover .muscle-label,
+.muscle-box.touch-active .muscle-label,
+.muscle-box.reveal-visible .muscle-label {
+  opacity: 1;
+  transform: translateY(0);
+  color: var(--accent-red);
+}
+
+/* Individual muscle target graphics generated for each body part */
+.crop-face {
+  background-image: url('/face.png');
+  background-size: cover;
+  background-position: center;
+}
+
+.crop-neck {
+  background-image: url('/neck.png');
+  background-size: cover;
+  background-position: center;
+}
+
+.crop-chest {
+  background-image: url('/chest.png');
+  background-size: cover;
+  background-position: center;
+}
+
+.crop-arms {
+  background-image: url('/arms.png');
+  background-size: cover;
+  background-position: center;
+}
+
+.crop-abs {
+  background-image: url('/abs.png');
+  background-size: cover;
+  background-position: center;
+}
+
+.crop-back {
+  background-image: url('/back.png');
+  background-size: cover;
+  background-position: center;
+}
+
+.crop-lat {
+  background-image: url('/lat.png');
+  background-size: cover;
+  background-position: center;
+}
+
+.crop-leg {
+  background-image: url('/leg.png');
+  background-size: cover;
+  background-position: center;
+}
+
+.crop-glutes {
+  background-image: url('/glutes.png');
+  background-size: cover;
+  background-position: center;
+}
+
+/* ==========================================================
+   2. WORSHIP PANEL (Alarms & Prayer Tally)
+   ========================================================== */
+.worship-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.worship-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  gap: 16px;
+}
+
+@media (max-width: 580px) {
+  .worship-header {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+.dua-logo-container {
+  width: 50px;
+  height: 50px;
+  color: var(--accent-red);
+}
+
+.dua-logo {
+  width: 100%;
+  height: 100%;
+}
+
+.panel-section-title {
+  font-size: 1.6rem;
+  color: var(--text-primary);
+}
+
+.subsection-title {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  border-left: 3px solid var(--accent-red);
+  padding-left: 8px;
+  margin-bottom: 12px;
+}
+
+/* Alarms list */
+.alarms-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.alarm-card {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  text-align: center;
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+  min-height: 120px;
+}
+
+.alarm-time-text {
+  font-size: 2rem;
+  font-family: var(--font-header);
+}
+
+/* Alarm State Colors */
+.alarm-pending {
+  background: var(--glass-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+.alarm-completed {
+  background: var(--item-bg-completed) !important;
+  border-color: var(--item-border-completed) !important;
+  color: var(--item-text-completed) !important;
+  box-shadow: 0 0 10px rgba(46, 204, 113, 0.2);
+}
+
+.alarm-card .delete-btn {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background: transparent;
+  border: none;
+  color: var(--text-dim);
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 4px;
+  border-radius: 50%;
+  line-height: 1;
+}
+
+.alarm-card .delete-btn:hover {
+  color: var(--accent-red);
+  background: rgba(0, 0, 0, 0.1);
+}
+
+/* Worship Tally */
+.worship-tally-card {
+  padding: 24px;
+  text-align: center;
+  max-width: 480px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.worship-tally-display {
+  font-family: var(--font-header);
+  font-size: 4.5rem;
+  color: var(--accent-red);
+  letter-spacing: 2px;
+  text-shadow: 0 0 15px var(--accent-red-glow);
+  margin: 12px 0;
+  user-select: none;
+}
+
+.worship-tally-controls {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.tally-adjust-btn {
+  background: var(--glass-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  font-size: 2rem;
+  cursor: pointer;
+  transition: transform 0.1s, border-color var(--transition-speed);
+}
+
+.tally-adjust-btn:hover {
+  border-color: var(--accent-red);
+  color: var(--accent-red);
+}
+
+.tally-adjust-btn:active {
+  transform: scale(0.92);
+}
+
+/* ==========================================================
+   3. DISCIPLINE PANEL (Todos & Sorting)
+   ========================================================== */
+.discipline-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.discipline-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+}
+
+@media (max-width: 580px) {
+  .discipline-header {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+}
+
+.discipline-sort-bar {
+  display: flex;
+  gap: 10px;
+}
+
+.discipline-todos-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 100px;
+}
+
+.todo-item-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border-radius: 8px;
+  cursor: grab;
+  user-select: none;
+  transition: transform 0.1s, box-shadow var(--transition-speed);
+}
+
+.todo-item-card:active {
+  cursor: grabbing;
+}
+
+.todo-item-card.dragging {
+  opacity: 0.5;
+  border-style: dashed;
+  transform: scale(0.98);
+}
+
+.todo-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-grow: 1;
+}
+
+.todo-checkbox {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.todo-checkbox.checked {
+  background-color: var(--accent-red);
+  border-color: var(--accent-red);
+}
+
+.todo-checkbox.checked::after {
+  content: '✓';
+  color: white;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.todo-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.todo-title-text {
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+
+.todo-item-card.completed-todo .todo-title-text {
+  text-decoration: line-through;
+  color: var(--text-dim);
+}
+
+.todo-time-badge {
+  font-size: 0.75rem;
+  color: var(--accent-red);
+  background: var(--accent-red-dim);
+  padding: 2px 6px;
+  border-radius: 4px;
+  width: fit-content;
+  margin-top: 4px;
+}
+
+/* Subtasks inside todo card */
+.todo-subtasks-container {
+  margin-top: 8px;
+  padding-left: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border-left: 1px dashed var(--border-color);
+}
+
+.subtask-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+}
+
+.subtask-box {
+  width: 14px;
+  height: 14px;
+  border: 1px solid var(--text-secondary);
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.subtask-box.checked {
+  background-color: var(--accent-red);
+  border-color: var(--accent-red);
+}
+
+.subtask-text.checked {
+  text-decoration: line-through;
+  color: var(--text-dim);
+}
+
+.todo-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.drag-handle {
+  color: var(--text-dim);
+  cursor: grab;
+  padding: 4px;
+  font-size: 1.2rem;
+}
+
+/* ==========================================================
+   4. FOCUS PANEL (Finance Tracker)
+   ========================================================== */
+.focus-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.finance-summary {
+  padding: 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.balance-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.balance-display .label {
+  font-size: 0.9rem;
+  letter-spacing: 2px;
+  color: var(--text-secondary);
+}
+
+.balance-display .value {
+  font-size: 3rem;
+  font-family: var(--font-header);
+  color: var(--text-primary);
+  margin-top: 4px;
+}
+
+.finance-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  width: 100%;
+  max-width: 500px;
+}
+
+.finance-stat {
+  padding: 12px;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border-color);
+}
+
+html.light .finance-stat {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.finance-stat.income {
+  color: #2ecc71;
+}
+
+.finance-stat.expense {
+  color: var(--accent-red);
+}
+
+.finance-stat span:first-child {
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.finance-stat span:last-child {
+  font-size: 1.4rem;
+  margin-top: 2px;
+}
+
+.ledger-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ledger-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+}
+
+.ledger-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ledger-title {
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+
+.ledger-notes {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.ledger-date {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+}
+
+.ledger-amount {
+  font-family: var(--font-header);
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.ledger-card.income .ledger-amount {
+  color: #2ecc71;
+}
+
+.ledger-card.expense .ledger-amount {
+  color: var(--accent-red);
+}
+
+/* ==========================================================
+   Workout Exercises List (Subpage Content)
+   ========================================================== */
+.exercise-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.exercise-card {
+  padding: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: transform 0.1s, background-color var(--transition-speed);
+}
+
+.exercise-card:active {
+  transform: scale(0.99);
+}
+
+/* Exercise States */
+.exercise-pending {
+  background: var(--item-bg-pending);
+  border: 1px solid var(--item-border-pending);
+  color: var(--item-text-pending);
+}
+
+.exercise-completed {
+  background: var(--item-bg-completed);
+  border: 1px solid var(--item-border-completed);
+  color: var(--item-text-completed);
+  box-shadow: 0 0 12px rgba(46, 204, 113, 0.15);
+}
+
+.exercise-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.exercise-name-text {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.exercise-style-badge {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  background: rgba(255,255,255,0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+  width: fit-content;
+}
+
+/* Inner exercise components (Counters, Stopwatch controls) */
+.exercise-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.exercise-tally-value {
+  font-family: var(--font-header);
+  font-size: 1.8rem;
+  min-width: 40px;
+  text-align: center;
+}
+
+.exercise-control-btn {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid currentColor;
+  color: inherit;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.exercise-control-btn:hover {
+  background: rgba(255,255,255,0.25);
+}
+
+/* Timer / Stopwatch displays */
+.exercise-time-display {
+  font-family: var(--font-header);
+  font-size: 1.6rem;
+  min-width: 80px;
+  text-align: right;
+  letter-spacing: 1px;
+}
+
+.exercise-action-btns {
+  display: flex;
+  gap: 6px;
+}
+
+.btn-mini {
+  padding: 6px 10px;
+  font-size: 0.75rem;
+  font-family: var(--font-header);
+}
+
+/* ==========================================================
+   App Footer Navigation Dock
+   ========================================================== */
+.app-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+  border-radius: 0;
+  border-bottom: none;
+  border-left: none;
+  border-right: none;
+  height: 70px;
+  padding: 8px 16px;
+}
+
+.nav-dock {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  max-width: 600px;
+  margin: 0 auto;
+  height: 100%;
+}
+
+.nav-tab {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  color: var(--text-secondary);
+  transition: color var(--transition-speed), transform 0.1s;
+  flex: 1;
+}
+
+.nav-tab:hover {
+  color: var(--text-primary);
+}
+
+.nav-tab.active {
+  color: var(--accent-red);
+  transform: translateY(-4px);
+}
+
+.nav-icon-wrapper {
+  position: relative;
+}
+
+.nav-icon {
+  width: 24px;
+  height: 24px;
+  transition: filter var(--transition-speed);
+}
+
+.nav-tab.active .nav-icon {
+  filter: drop-shadow(0 0 5px var(--accent-red-glow));
+}
+
+.nav-text {
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* ==========================================================
+   Modals & Popups Overlays
+   ========================================================== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 200;
+  padding: 16px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-speed) ease;
+}
+
+.modal-overlay:not(.hidden) {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-card {
+  width: 100%;
+  max-width: 440px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+}
+
+.modal-title {
+  font-size: 1.5rem;
+  border-bottom: 2px solid var(--accent-red);
+  padding-bottom: 6px;
+  color: var(--accent-red);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+/* Fullscreen Subpage Modals (e.g. Body part exercises, accounts) */
+.full-modal {
+  width: 100%;
+  height: 100%;
+  max-width: 800px;
+  max-height: 90vh;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  overflow: hidden;
+}
+
+@media (max-width: 600px) {
+  .full-modal {
+    max-height: 100vh;
+    height: 100%;
+    border-radius: 0;
+    border: none;
+  }
+}
+
+.subpage-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-color);
+  background: rgba(0,0,0,0.2);
+}
+
+.close-icon-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-icon-btn:hover {
+  color: var(--accent-red);
+}
+
+.subpage-content {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+/* Floating Action Button inside subpages */
+.floating-action-btn {
+  position: absolute;
+  bottom: 24px;
+  right: 24px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: var(--accent-red);
+  color: white;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  box-shadow: 0 4px 14px 0 var(--accent-red-glow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.1s, background-color var(--transition-speed);
+  z-index: 10;
+}
+
+.floating-action-btn:hover {
+  background-color: #ff3b30;
+  transform: scale(1.05);
+}
+
+.floating-action-btn:active {
+  transform: scale(0.95);
+}
+
+/* ==========================================================
+   Account Modal Components
+   ========================================================== */
+.wide-modal {
+  max-width: 900px;
+}
+
+.account-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  padding: 20px;
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+@media (max-width: 768px) {
+  .account-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.account-section {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sub-sec-title {
+  font-size: 1.2rem;
+  border-left: 3px solid var(--accent-red);
+  padding-left: 8px;
+}
+
+.profile-avatar-editor {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.profile-avatar-editor img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--border-color);
+}
+
+.avatar-presets {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.avatar-selection-grid {
+  display: flex;
+  gap: 8px;
+}
+
+.avatar-option {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 1px solid var(--border-color);
+  opacity: 0.6;
+  transition: opacity var(--transition-speed), border-color var(--transition-speed);
+}
+
+.avatar-option:hover, .avatar-option.active {
+  opacity: 1;
+  border-color: var(--accent-red);
+  box-shadow: 0 0 5px var(--accent-red-glow);
+}
+
+.session-log-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.session-logs-list {
+  max-height: 120px;
+  overflow-y: auto;
+  background: rgba(0,0,0,0.15);
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+}
+
+.session-log-item {
+  font-size: 0.8rem;
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  color: var(--text-secondary);
+}
+
+.session-log-item:last-child {
+  border-bottom: none;
+}
+
+.text-dim {
+  color: var(--text-dim) !important;
+}
+
+.full-width {
+  width: 100%;
+}
+
+/* Subtask Creator rows */
+.subtask-inputs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.subtask-input-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.subtask-input-row input {
+  flex-grow: 1;
+  padding: 8px;
+}
+
+.remove-subtask-field-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-dim);
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.remove-subtask-field-btn:hover {
+  color: var(--accent-red);
+}
+
+/* ==========================================================
+   Widgets Details modals (Timer, Stopwatch, Tally)
+   ========================================================== */
+.stopwatch-large-display, .tally-large-display {
+  font-size: 4rem;
+  text-align: center;
+  color: var(--accent-red);
+  text-shadow: 0 0 15px var(--accent-red-glow);
+  margin: 12px 0;
+}
+
+.stopwatch-laps {
+  max-height: 140px;
+  overflow-y: auto;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.stopwatch-lap-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.95rem;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  padding-bottom: 4px;
+}
+
+/* Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0.1);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-red);
+}
+
+/* ==========================================================
+   Home Panel Styles & Thunder Animation
+   ========================================================== */
+.home-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.home-illustration-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px;
+  text-align: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.thunder-character-container {
+  width: 100%;
+  max-width: 320px;
+  height: 380px;
+  position: relative;
+  border-radius: 8px;
+  border: 2px solid var(--border-color);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  background-color: #000;
+}
+
+.thunder-character-img {
+  width: 100%;
+  height: 100%;
+  background-image: url('/background.jpg');
+  background-size: cover;
+  background-position: center top;
+  transition: filter 0.1s ease, transform 0.1s ease;
+  animation: characterPulse 4s ease-in-out infinite;
+}
+
+/* Lightning Strikes overlay */
+.lightning-strike {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 5;
+  background: transparent;
+}
+
+.lightning-strike.l-1 {
+  background: linear-gradient(to right, transparent 48%, rgba(255, 255, 255, 0.95) 49%, rgba(255, 0, 0, 0.9) 50%, rgba(255, 255, 255, 0.95) 51%, transparent 52%);
+  clip-path: polygon(50% 0%, 40% 30%, 60% 35%, 45% 65%, 55% 70%, 45% 100%);
+  animation: strikeOne 7s infinite;
+}
+
+.lightning-strike.l-2 {
+  background: linear-gradient(to right, transparent 48%, rgba(255, 255, 255, 0.95) 49%, rgba(255, 0, 0, 0.9) 50%, rgba(255, 255, 255, 0.95) 51%, transparent 52%);
+  clip-path: polygon(70% 0%, 65% 25%, 75% 30%, 60% 60%, 70% 65%, 55% 100%);
+  animation: strikeTwo 11s infinite;
+}
+
+.lightning-strike.l-3 {
+  background: linear-gradient(to right, transparent 48%, rgba(255, 255, 255, 0.95) 49%, rgba(255, 0, 0, 0.9) 50%, rgba(255, 255, 255, 0.95) 51%, transparent 52%);
+  clip-path: polygon(30% 0%, 25% 40%, 35% 45%, 20% 70%, 30% 75%, 25% 100%);
+  animation: strikeThree 5.5s infinite;
+}
+
+/* Electric arcs overlay */
+.electric-arcs {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 4;
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(255, 0, 0, 0.15) 0%, transparent 80%);
+  opacity: 0;
+  animation: arcFlicker 2s infinite;
+}
+
+/* Motivational quote box */
+.motivational-quote-box {
+  margin-top: 16px;
+  z-index: 2;
+}
+
+.quote-text {
+  font-size: 1.6rem;
+  color: var(--accent-red);
+  text-shadow: 0 0 10px var(--accent-red-glow);
+  text-transform: uppercase;
+}
+
+.quote-author {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  letter-spacing: 2px;
+  margin-top: 4px;
+  display: block;
+}
+
+/* Progress Section */
+.progress-section {
+  padding: 20px;
+}
+
+.progress-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.progress-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.progress-item-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.progress-name {
+  color: var(--text-primary);
+}
+
+.progress-val {
+  color: var(--accent-red);
+}
+
+.progress-bar-bg {
+  background: rgba(255, 255, 255, 0.1);
+  height: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+}
+
+html.light .progress-bar-bg {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: var(--accent-red);
+  box-shadow: 0 0 8px var(--accent-red-glow);
+  border-radius: 4px;
+  width: 0%;
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Animations for Thunder strikes */
+@keyframes strikeOne {
+  0%, 25%, 27%, 100% { opacity: 0; }
+  26% { opacity: 1; }
+}
+
+@keyframes strikeTwo {
+  0%, 65%, 67%, 100% { opacity: 0; }
+  66% { opacity: 1; }
+}
+
+@keyframes strikeThree {
+  0%, 45%, 47%, 50%, 52%, 100% { opacity: 0; }
+  46%, 51% { opacity: 1; }
+}
+
+@keyframes arcFlicker {
+  0%, 19%, 21%, 23%, 25%, 39%, 41%, 43%, 45%, 100% { opacity: 0; }
+  20%, 24%, 40%, 44% { opacity: 0.5; }
+}
+
+@keyframes characterPulse {
+  0%, 100% { transform: scale(1); filter: brightness(1) contrast(1); }
+  25.5%, 26.5% { filter: brightness(1.7) contrast(1.4) drop-shadow(0 0 15px rgba(255, 0, 0, 0.8)); transform: scale(1.02); }
+  45.5%, 46.5% { filter: brightness(1.7) contrast(1.4) drop-shadow(0 0 15px rgba(255, 0, 0, 0.8)); transform: scale(1.02); }
+  50.5%, 51.5% { filter: brightness(1.7) contrast(1.4) drop-shadow(0 0 15px rgba(255, 0, 0, 0.8)); transform: scale(1.02); }
+  65.5%, 66.5% { filter: brightness(1.7) contrast(1.4) drop-shadow(0 0 15px rgba(255, 0, 0, 0.8)); transform: scale(1.02); }
+}

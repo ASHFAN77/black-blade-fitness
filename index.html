@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>BLACK BLADE | Fitness & Discipline Tracker</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <!-- Global Parallax Background -->
+  <div class="parallax-bg" id="appBg"></div>
+  <div class="bg-overlay"></div>
+
+  <!-- Auth Screen (overlay if not logged in) -->
+  <div id="authScreen" class="overlay-panel auth-overlay active">
+    <div class="auth-card glass-panel">
+      <div class="brand-header">
+        <div class="brand-sword-logo">
+          <svg class="sword-logo" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M30 70 L70 30" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+            <path d="M26 66 L34 74" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+            <path d="M28 68 L15 81" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+            <circle cx="15" cy="81" r="2" fill="currentColor"/>
+          </svg>
+        </div>
+        <h1 class="glow-text font-header">THE BLACK BLADE</h1>
+        <p class="subtitle font-body">YOUR FUTURE DEPENDS ON TODAY</p>
+      </div>
+      
+      <!-- Login Form -->
+      <form id="loginForm" class="auth-form">
+        <h2 class="form-title font-header">LOGIN</h2>
+        <div class="input-group">
+          <label for="loginEmail" class="font-body">Email</label>
+          <input type="email" id="loginEmail" required placeholder="Enter email">
+        </div>
+        <div class="input-group">
+          <label for="loginPassword" class="font-body">Password</label>
+          <input type="password" id="loginPassword" required placeholder="Enter password">
+        </div>
+        <button type="submit" class="btn btn-red font-header">EXECUTE LOGIN</button>
+        <p class="auth-toggle font-body">New warrior? <span id="toSignup">Register here</span></p>
+      </form>
+
+      <!-- Signup Form -->
+      <form id="signupForm" class="auth-form hidden">
+        <h2 class="form-title font-header">SIGN UP</h2>
+        <div class="input-group">
+          <label for="signupUsername" class="font-body">Warrior Name</label>
+          <input type="text" id="signupUsername" required placeholder="Choose username">
+        </div>
+        <div class="input-group">
+          <label for="signupEmail" class="font-body">Email</label>
+          <input type="email" id="signupEmail" required placeholder="Enter email">
+        </div>
+        <div class="input-group">
+          <label for="signupPassword" class="font-body">Password</label>
+          <input type="password" id="signupPassword" required minlength="6" placeholder="Choose secure password">
+        </div>
+        <button type="submit" class="btn btn-red font-header">CREATE ACCOUNT</button>
+        <p class="auth-toggle font-body">Already a member? <span id="toLogin">Login here</span></p>
+      </form>
+      <div id="authError" class="auth-error font-body"></div>
+    </div>
+  </div>
+
+  <!-- Main App Shell -->
+  <div id="appShell" class="app-container hidden">
+    <!-- Top Header Bar -->
+    <header class="app-header glass-panel">
+      <!-- Widgets (Top Left) -->
+      <div class="top-left-widgets">
+        <!-- Theme Control -->
+        <button id="themeToggle" class="widget-btn" title="Toggle Theme">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z" fill="currentColor"/></svg>
+        </button>
+
+        <!-- Global Timer -->
+        <button id="timerWidgetBtn" class="widget-btn" title="Global Timer">
+          <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 6v6h4" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+          <span class="widget-text font-header" id="headerTimerVal">10:00</span>
+        </button>
+
+        <!-- Global Stopwatch -->
+        <button id="stopwatchWidgetBtn" class="widget-btn" title="Global Stopwatch">
+          <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 6v6l3 3" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+          <span class="widget-text font-header" id="headerStopwatchVal">00:00.0</span>
+        </button>
+
+        <!-- Global Tally -->
+        <button id="tallyWidgetBtn" class="widget-btn" title="Global Tally Counter">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="currentColor"/></svg>
+          <span class="widget-text font-header" id="headerTallyVal">0</span>
+        </button>
+      </div>
+
+      <!-- App Title -->
+      <div class="app-title-container">
+        <svg class="sword-icon" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M30 70 L70 30" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+          <path d="M26 66 L34 74" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+          <path d="M28 68 L15 81" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+          <circle cx="15" cy="81" r="2" fill="currentColor"/>
+        </svg>
+        <h1 class="app-title font-header glow-text">BLACK BLADE</h1>
+      </div>
+
+      <!-- Profile & Account (Top Right) -->
+      <button id="profileBtn" class="profile-circle-btn" title="Manage Account">
+        <div class="avatar-ring"></div>
+        <img id="headerAvatar" src="/character_profile.jpg" alt="Profile">
+      </button>
+    </header>
+
+    <!-- Main Dynamic Content Panel -->
+    <main class="app-viewport">
+      <!-- 0. HOME PANEL -->
+      <section id="homePanel" class="viewport-panel active">
+        <div class="home-container">
+          <!-- Thunder Character Illustration Card -->
+          <div class="home-illustration-card glass-panel">
+            <div class="thunder-character-container">
+              <div class="thunder-character-img" id="thunderCharacterImg"></div>
+              <!-- Lightning Overlay Bolts -->
+              <div class="lightning-strike l-1"></div>
+              <div class="lightning-strike l-2"></div>
+              <div class="lightning-strike l-3"></div>
+              <div class="electric-arcs"></div>
+            </div>
+            <!-- Motivational Quote -->
+            <div class="motivational-quote-box">
+              <p class="quote-text font-header" id="homeQuoteText">"YOUR FUTURE DEPENDS ON TODAY"</p>
+              <span class="quote-author font-body">— THE BLACK BLADE</span>
+            </div>
+          </div>
+
+          <!-- Section Progress Status Tracker -->
+          <div class="progress-section glass-panel">
+            <h3 class="subsection-title font-header">WARRIOR PROGRESS</h3>
+            <div class="progress-list">
+              <!-- Workout Progress -->
+              <div class="progress-item">
+                <div class="progress-item-header">
+                  <span class="progress-name font-body">WORKOUT PROGRESS</span>
+                  <span class="progress-val font-header" id="progressWorkoutVal">0 / 0 Done</span>
+                </div>
+                <div class="progress-bar-bg">
+                  <div class="progress-bar-fill" id="progressWorkoutBar" style="width: 0%"></div>
+                </div>
+              </div>
+
+              <!-- Worship Progress -->
+              <div class="progress-item">
+                <div class="progress-item-header">
+                  <span class="progress-name font-body">WORSHIP PROGRESS</span>
+                  <span class="progress-val font-header" id="progressWorshipVal">0 / 0 Done</span>
+                </div>
+                <div class="progress-bar-bg">
+                  <div class="progress-bar-fill" id="progressWorshipBar" style="width: 0%"></div>
+                </div>
+              </div>
+
+              <!-- Discipline Progress -->
+              <div class="progress-item">
+                <div class="progress-item-header">
+                  <span class="progress-name font-body">DISCIPLINE PROGRESS</span>
+                  <span class="progress-val font-header" id="progressDisciplineVal">0 / 0 Done</span>
+                </div>
+                <div class="progress-bar-bg">
+                  <div class="progress-bar-fill" id="progressDisciplineBar" style="width: 0%"></div>
+                </div>
+              </div>
+
+              <!-- Focus Progress -->
+              <div class="progress-item">
+                <div class="progress-item-header">
+                  <span class="progress-name font-body">FOCUS LEDGER</span>
+                  <span class="progress-val font-header" id="progressFocusVal">$0.00 Net Savings</span>
+                </div>
+                <div class="progress-bar-bg">
+                  <div class="progress-bar-fill" id="progressFocusBar" style="width: 0%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 1. WORKOUT PANEL -->
+      <section id="workoutPanel" class="viewport-panel">
+        <div class="muscle-grid">
+          <!-- Muscle Parts (Clipped from character profile sheet) -->
+          <div class="muscle-box glass-panel" data-part="face">
+            <div class="muscle-crop crop-face"></div>
+            <div class="muscle-label font-header">FACE</div>
+          </div>
+          <div class="muscle-box glass-panel" data-part="neck">
+            <div class="muscle-crop crop-neck"></div>
+            <div class="muscle-label font-header">NECK</div>
+          </div>
+          <div class="muscle-box glass-panel" data-part="chest">
+            <div class="muscle-crop crop-chest"></div>
+            <div class="muscle-label font-header">CHEST</div>
+          </div>
+          <div class="muscle-box glass-panel" data-part="arms">
+            <div class="muscle-crop crop-arms"></div>
+            <div class="muscle-label font-header">ARMS</div>
+          </div>
+          <div class="muscle-box glass-panel" data-part="abs">
+            <div class="muscle-crop crop-abs"></div>
+            <div class="muscle-label font-header">ABS</div>
+          </div>
+          <div class="muscle-box glass-panel" data-part="back">
+            <div class="muscle-crop crop-back"></div>
+            <div class="muscle-label font-header">BACK</div>
+          </div>
+          <div class="muscle-box glass-panel" data-part="lat">
+            <div class="muscle-crop crop-lat"></div>
+            <div class="muscle-label font-header">LAT</div>
+          </div>
+          <div class="muscle-box glass-panel" data-part="leg">
+            <div class="muscle-crop crop-leg"></div>
+            <div class="muscle-label font-header">LEG</div>
+          </div>
+          <div class="muscle-box glass-panel" data-part="glutes">
+            <div class="muscle-crop crop-glutes"></div>
+            <div class="muscle-label font-header">GLUTES</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. WORSHIP PANEL -->
+      <section id="worshipPanel" class="viewport-panel">
+        <div class="worship-container">
+          <div class="worship-header glass-panel">
+            <div class="dua-logo-container">
+              <!-- Dua Hands Logo -->
+              <svg class="dua-logo" viewBox="0 0 100 100" fill="currentColor">
+                <path d="M25 70c2-5 8-25 15-32 3-3 8-4 10-1s0 8-3 12c-4 5-11 16-11 21s5 5 10-1c4-5 13-20 17-23 3-2 6-2 7 1s-2 5-6 10c-5 6-12 18-9 22 2 3 6 1 9-3 4-5 11-18 14-20 2-2 5-1 5 2s-3 6-7 11c-5 6-10 13-9 17 2 4 6 1 9-4 3-5 7-12 9-13 2-1 4 0 4 2s-3 6-6 11c-4 7-7 15-5 18 3 4 9-2 9-2" stroke="currentColor" stroke-width="2" fill="none"/>
+                <path d="M75 70c-2-5-8-25-15-32-3-3-8-4-10-1s0 8 3 12c4 5 11 16 11 21s-5 5-10-1c-4-5-13-20-17-23-3-2-6-2-7 1s2 5 6 10c5 6 12 18 9 22-2 3-6 1-9-3-4-5-11-18-14-20-2-2-5-1-5 2s3 6 7 11c5 6 10 13 9 17-2 4-6 1-9-4-3-5-7-12-9-13-2-1-4 0-4 2s3 6 6 11c4 7 7 15 5 18-3 4-9-2-9-2" stroke="currentColor" stroke-width="2" fill="none"/>
+              </svg>
+            </div>
+            <h2 class="panel-section-title font-header">DAILY WORSHIP</h2>
+            <button id="addAlarmBtn" class="btn btn-red font-header">ADD PRAYER / ALARM</button>
+          </div>
+
+          <!-- Alarms List -->
+          <div class="alarm-list-section">
+            <h3 class="subsection-title font-header">ACTIVE ALARMS</h3>
+            <div id="worshipAlarmsList" class="alarms-grid">
+              <!-- Loaded dynamically -->
+            </div>
+          </div>
+
+          <!-- Tally Counter widget for Worship -->
+          <div class="worship-tally-card glass-panel">
+            <h3 class="font-header glow-text">PRAYER TALLY</h3>
+            <div class="worship-tally-display" id="worshipTallyVal">000</div>
+            <div class="worship-tally-controls">
+              <button id="worshipTallyMinus" class="tally-adjust-btn font-header">-</button>
+              <button id="worshipTallyPlus" class="tally-adjust-btn font-header">+</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. DISCIPLINE PANEL -->
+      <section id="disciplinePanel" class="viewport-panel">
+        <div class="discipline-container">
+          <div class="discipline-header glass-panel">
+            <h2 class="panel-section-title font-header">WARRIOR DISCIPLINE</h2>
+            <div class="discipline-sort-bar">
+              <button id="sortTodoTimeBtn" class="btn btn-outline font-header">SORT BY TIME</button>
+              <button id="addTodoBtn" class="btn btn-red font-header">ADD TASK</button>
+            </div>
+          </div>
+
+          <!-- Todos List -->
+          <div id="disciplineList" class="discipline-todos-list">
+            <!-- Loaded dynamically with Drag & Drop capability -->
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. FOCUS PANEL -->
+      <section id="focusPanel" class="viewport-panel">
+        <div class="focus-container">
+          <!-- Balance Summary Card -->
+          <div class="finance-summary glass-panel">
+            <h2 class="panel-section-title font-header">FINANCE LEDGER</h2>
+            <div class="balance-display">
+              <span class="label font-body">NET VALUE</span>
+              <span class="value font-header glow-text" id="netBalanceVal">$0.00</span>
+            </div>
+            <div class="finance-grid">
+              <div class="finance-stat income">
+                <span class="font-body">INFLOW</span>
+                <span class="font-header" id="totalIncomeVal">+$0.00</span>
+              </div>
+              <div class="finance-stat expense">
+                <span class="font-body">OUTFLOW</span>
+                <span class="font-header" id="totalExpenseVal">-$0.00</span>
+              </div>
+            </div>
+            <button id="addFinanceBtn" class="btn btn-red font-header">ADD NOTE / TRANSACTION</button>
+          </div>
+
+          <!-- Notes Ledger List -->
+          <div class="finance-ledger-section">
+            <h3 class="subsection-title font-header">RECENT TRANSACTIONS</h3>
+            <div id="financeLedgerList" class="ledger-list">
+              <!-- Loaded dynamically -->
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Navigation Dock (Bottom Footer) -->
+    <footer class="app-footer glass-panel">
+      <nav class="nav-dock">
+        <!-- Home Button -->
+        <button class="nav-tab active" data-target="homePanel">
+          <div class="nav-icon-wrapper">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+              <polyline points="9 22 9 12 15 12 15 22"/>
+            </svg>
+          </div>
+          <span class="nav-text font-header">HOME</span>
+        </button>
+
+        <!-- Workout Button -->
+        <button class="nav-tab" data-target="workoutPanel">
+          <div class="nav-icon-wrapper">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19 8h-1V7c0-1.1-.9-2-2-2h-8c-1.1 0-2 .9-2 2v1H5c-1.1 0-2 .9-2 2v4c0 1.1.9 2 2 2h1v1c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2v-1h1c1.1 0 2-.9 2-2v-4c0-1.1-.9-2-2-2zm-12-1h8v1H7V7zm10 10H7v-1h10v1zm2-3H5v-4h14v4z"/>
+            </svg>
+          </div>
+          <span class="nav-text font-header">WORKOUT</span>
+        </button>
+
+        <!-- Worship Button -->
+        <button class="nav-tab" data-target="worshipPanel">
+          <div class="nav-icon-wrapper">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 19c0-1.5-1-3-3-4.5m-15 0C2 16 1 17.5 1 19m18-9V8c0-3.3-2.7-6-6-6h-2C7.7 2 5 4.7 5 8v2M12 22v-8m-4 4h8"/>
+            </svg>
+          </div>
+          <span class="nav-text font-header">WORSHIP</span>
+        </button>
+
+        <!-- Discipline Button -->
+        <button class="nav-tab" data-target="disciplinePanel">
+          <div class="nav-icon-wrapper">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/><path d="M9 12l2 2 4-4"/>
+            </svg>
+          </div>
+          <span class="nav-text font-header">DISCIPLINE</span>
+        </button>
+
+        <!-- Focus Button -->
+        <button class="nav-tab" data-target="focusPanel">
+          <div class="nav-icon-wrapper">
+            <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/><path d="M12 6v12m-2.5-9h4a1.5 1.5 0 0 1 0 3h-3a1.5 1.5 0 0 0 0 3h4"/>
+            </svg>
+          </div>
+          <span class="nav-text font-header">FOCUS</span>
+        </button>
+      </nav>
+    </footer>
+  </div>
+
+  <!-- Dynamic Views (Floating Sub-Pages / Modals) -->
+
+  <!-- Body Part Exercise Page (Workout Panel Subpage) -->
+  <div id="bodyPartSubpage" class="modal-overlay hidden">
+    <div class="subpage-card glass-panel full-modal">
+      <div class="subpage-header">
+        <button id="closeSubpageBtn" class="close-icon-btn">
+          <svg viewBox="0 0 24 24" class="icon"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" fill="currentColor"/></svg>
+        </button>
+        <h2 id="subpageTitle" class="font-header glow-text">ABS TARGETS</h2>
+        <div class="placeholder-icon"></div>
+      </div>
+      <div class="subpage-content">
+        <div id="exerciseList" class="exercise-items-list">
+          <!-- Loaded dynamically -->
+        </div>
+      </div>
+      <!-- Add Exercise Floating Button inside the subpage -->
+      <button id="triggerAddExerciseBtn" class="floating-action-btn font-header">+</button>
+    </div>
+  </div>
+
+  <!-- Add Exercise Modal -->
+  <div id="addExerciseModal" class="modal-overlay hidden">
+    <div class="modal-card glass-panel">
+      <h3 class="modal-title font-header glow-text">ADD EXERCISE</h3>
+      <form id="addExerciseForm">
+        <div class="input-group">
+          <label for="exerciseName" class="font-body">Exercise Name</label>
+          <input type="text" id="exerciseName" required placeholder="e.g. Sit-Ups">
+        </div>
+        <div class="input-group">
+          <label for="counterType" class="font-body">Tracker Style</label>
+          <select id="counterType">
+            <option value="tally">Tally Counter</option>
+            <option value="stopwatch">Stopwatch</option>
+            <option value="timer">Timer</option>
+          </select>
+        </div>
+        <div class="modal-actions">
+          <button type="button" id="cancelExerciseBtn" class="btn btn-outline font-header">CANCEL</button>
+          <button type="submit" class="btn btn-red font-header">SAVE TARGET</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add Alarm / Worship Modal -->
+  <div id="addAlarmModal" class="modal-overlay hidden">
+    <div class="modal-card glass-panel">
+      <h3 class="modal-title font-header glow-text">NEW PRAYER / ALARM</h3>
+      <form id="addAlarmForm">
+        <div class="input-group">
+          <label for="alarmTime" class="font-body">Time (24h)</label>
+          <input type="time" id="alarmTime" required>
+        </div>
+        <div class="modal-actions">
+          <button type="button" id="cancelAlarmBtn" class="btn btn-outline font-header">CANCEL</button>
+          <button type="submit" class="btn btn-red font-header">ADD ALARM</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add Task / Discipline Modal -->
+  <div id="addTodoModal" class="modal-overlay hidden">
+    <div class="modal-card glass-panel">
+      <h3 class="modal-title font-header glow-text">ADD WARRIOR TASK</h3>
+      <form id="addTodoForm">
+        <div class="input-group">
+          <label for="todoTitle" class="font-body">Task Title</label>
+          <input type="text" id="todoTitle" required placeholder="e.g. Read Philosophy">
+        </div>
+        <div class="input-group">
+          <label for="todoTime" class="font-body">Scheduled Time</label>
+          <input type="time" id="todoTime">
+        </div>
+        <div class="input-group">
+          <label class="font-body">Sub-tasks (Checkboxes)</label>
+          <div id="subtaskInputsContainer" class="subtask-inputs-list">
+            <!-- Dynamically adds textbox inputs -->
+          </div>
+          <button type="button" id="addSubtaskFieldBtn" class="btn btn-small font-body">+ Add Checkbox</button>
+        </div>
+        <div class="modal-actions">
+          <button type="button" id="cancelTodoBtn" class="btn btn-outline font-header">CANCEL</button>
+          <button type="submit" class="btn btn-red font-header">SAVE DISCIPLINE</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add Finance Note / Focus Modal -->
+  <div id="addFinanceModal" class="modal-overlay hidden">
+    <div class="modal-card glass-panel">
+      <h3 class="modal-title font-header glow-text">ADD TRANSACTION</h3>
+      <form id="addFinanceForm">
+        <div class="input-group">
+          <label for="financeTitle" class="font-body">Title / Concept</label>
+          <input type="text" id="financeTitle" required placeholder="e.g. Book Purchase">
+        </div>
+        <div class="input-group">
+          <label for="financeAmount" class="font-body">Amount ($)</label>
+          <input type="number" step="0.01" min="0.01" id="financeAmount" required placeholder="e.g. 19.99">
+        </div>
+        <div class="input-group">
+          <label for="financeType" class="font-body">Type</label>
+          <select id="financeType">
+            <option value="expense">Expense (Outflow)</option>
+            <option value="income">Income (Inflow)</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label for="financeNotes" class="font-body">Notes</label>
+          <textarea id="financeNotes" placeholder="Additional details..."></textarea>
+        </div>
+        <div class="modal-actions">
+          <button type="button" id="cancelFinanceBtn" class="btn btn-outline font-header">CANCEL</button>
+          <button type="submit" class="btn btn-red font-header">LOG TRANSACTION</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Account & Sessions Modal (Top Right Click) -->
+  <div id="accountModal" class="modal-overlay hidden">
+    <div class="modal-card glass-panel wide-modal">
+      <div class="subpage-header">
+        <button id="closeAccountModalBtn" class="close-icon-btn">
+          <svg viewBox="0 0 24 24" class="icon"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" fill="currentColor"/></svg>
+        </button>
+        <h2 class="font-header glow-text">WARRIOR GATE</h2>
+        <div class="placeholder-icon"></div>
+      </div>
+      
+      <div class="account-grid">
+        <!-- Left Side: Profile Setup -->
+        <div class="account-section glass-panel">
+          <div class="profile-avatar-editor" style="display: flex; flex-direction: column; align-items: center; gap: 12px; margin-bottom: 20px; width: 100%;">
+            <div style="width: 90px; height: 90px; border-radius: 50%; border: 2.5px solid var(--border-color); overflow: hidden; background: rgba(0,0,0,0.25); display: flex; justify-content: center; align-items: center; box-shadow: 0 0 15px rgba(212, 175, 55, 0.15);">
+              <img id="accountAvatar" src="" alt="Profile avatar" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+            <div class="custom-avatar-uploader">
+              <label for="avatarUploadInput" class="btn btn-outline btn-small font-body" style="cursor: pointer; display: inline-flex; align-items: center; gap: 4px; padding: 6px 14px; font-size: 0.8rem; height: auto;">
+                UPLOAD PICTURE
+              </label>
+              <input type="file" id="avatarUploadInput" accept="image/*" style="display: none;">
+            </div>
+          </div>
+          <div class="input-group">
+            <label for="profileUsername" class="font-body">Warrior Name</label>
+            <input type="text" id="profileUsername" placeholder="Username">
+          </div>
+          <button id="saveProfileBtn" class="btn btn-red font-header">UPDATE PROFILE</button>
+        </div>
+
+        <!-- Right Side: Security & Device Logs -->
+        <div class="account-section glass-panel">
+          <h3 class="font-header sub-sec-title">SECURITY & SESSION</h3>
+          
+          <!-- Device Log Button -->
+          <div class="session-log-card">
+            <button class="btn btn-outline full-width font-body" id="sessionLogHeader">
+              VIEW SECURITY LOGS
+            </button>
+            <div id="sessionLogContent" class="session-logs-list hidden">
+              <!-- Render logins dynamically -->
+              <p class="font-body text-dim" id="lastLoginDisplay">Active since 2026-06-06 14:59</p>
+            </div>
+          </div>
+
+          <!-- Password Update -->
+          <div class="password-management-form">
+            <h4 class="font-header">MANAGE PASSWORD</h4>
+            <div class="input-group">
+              <label for="newPassword" class="font-body">New Password</label>
+              <input type="password" id="newPassword" placeholder="Minimum 6 characters">
+            </div>
+            <button id="updatePasswordBtn" class="btn btn-red font-header">CHANGE PASSWORD</button>
+            <div id="securityMessage" class="auth-error font-body"></div>
+          </div>
+
+          <!-- Log Out / Switch -->
+          <div class="account-actions">
+            <button id="logoutBtn" class="btn btn-outline font-header full-width">LOGOUT WARRIOR</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Global Widget Modals -->
+  <!-- Global Timer Setting Modal -->
+  <div id="globalTimerModal" class="modal-overlay hidden">
+    <div class="modal-card glass-panel">
+      <h3 class="modal-title font-header glow-text">SET TARGET TIMER</h3>
+      <div class="input-group">
+        <label for="timerInputMin" class="font-body">Minutes</label>
+        <input type="number" id="timerInputMin" min="0" max="180" value="10">
+      </div>
+      <div class="input-group">
+        <label for="timerInputSec" class="font-body">Seconds</label>
+        <input type="number" id="timerInputSec" min="0" max="59" value="0">
+      </div>
+      <div class="modal-actions timer-controls">
+        <button id="timerReset" class="btn btn-outline font-header">RESET</button>
+        <button id="timerToggle" class="btn btn-red font-header">START</button>
+        <button id="closeTimerModal" class="btn btn-outline font-body">CLOSE</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Global Stopwatch Modal -->
+  <div id="globalStopwatchModal" class="modal-overlay hidden">
+    <div class="modal-card glass-panel">
+      <h3 class="modal-title font-header glow-text">STOPWATCH STATUS</h3>
+      <div class="stopwatch-large-display font-header" id="modalStopwatchVal">00:00.00</div>
+      
+      <div class="stopwatch-laps glass-panel" id="stopwatchLapsList">
+        <!-- Lap logs will display here -->
+      </div>
+      
+      <div class="modal-actions stopwatch-controls">
+        <button id="stopwatchLap" class="btn btn-outline font-header">LAP</button>
+        <button id="stopwatchReset" class="btn btn-outline font-header">RESET</button>
+        <button id="stopwatchToggle" class="btn btn-red font-header">START</button>
+        <button id="closeStopwatchModal" class="btn btn-outline font-body">CLOSE</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Global Tally Modal -->
+  <div id="globalTallyModal" class="modal-overlay hidden">
+    <div class="modal-card glass-panel">
+      <h3 class="modal-title font-header glow-text">GLOBAL COUNTER</h3>
+      <div class="tally-large-display font-header" id="modalTallyVal">0</div>
+      <div class="modal-actions tally-controls">
+        <button id="modalTallyMinus" class="btn btn-outline font-header">- DECREMENT</button>
+        <button id="modalTallyPlus" class="btn btn-red font-header">+ INCREMENT</button>
+        <button id="closeTallyModal" class="btn btn-outline font-body">CLOSE</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sound effect alert for timers -->
+  <audio id="timerAlertSound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-500.wav" preload="auto"></audio>
+
+  <!-- Vite module entry -->
+  <script type="module" src="/main.js"></script>
+</body>
+</html>
