@@ -566,6 +566,7 @@ async function addWorkoutExercise(name, type) {
     renderExercises();
   } catch (error) {
     console.error('Error adding exercise:', error);
+    alert('Failed to save workout: ' + error.message);
   }
 }
 
@@ -849,6 +850,7 @@ async function addWorshipAlarm(time) {
     renderWorshipAlarms();
   } catch (error) {
     console.error('Error adding alarm:', error);
+    alert('Failed to save alarm: ' + error.message);
   }
 }
 
@@ -1086,6 +1088,7 @@ async function addTodo(title, time, checkboxes) {
     renderDisciplineTodos();
   } catch (error) {
     console.error('Error adding todo:', error);
+    alert('Failed to save task: ' + error.message);
   }
 }
 
@@ -1340,6 +1343,7 @@ async function addFinanceNote(title, amount, type, notes) {
     renderFinanceLedger();
   } catch (error) {
     console.error('Error logging transaction:', error);
+    alert('Failed to save transaction: ' + error.message);
   }
 }
 
