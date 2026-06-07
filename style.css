@@ -236,6 +236,44 @@ body {
   font-weight: 600;
 }
 
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.password-wrapper input {
+  width: 100% !important;
+  padding-right: 44px !important;
+}
+
+.password-toggle-btn {
+  position: absolute;
+  right: 6px;
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: 4px;
+  transition: color var(--transition-speed);
+  z-index: 5;
+}
+
+.password-toggle-btn:hover {
+  color: var(--accent-red);
+}
+
+.password-toggle-btn svg {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+}
+
 input, select, textarea {
   background: rgba(0, 0, 0, 0.3);
   border: 1px solid var(--border-color);

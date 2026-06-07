@@ -37,7 +37,7 @@ const state = {
 // ==========================================================
 // Utility: Timeout wrapper for async calls
 // ==========================================================
-function withTimeout(promise, ms = 15000) {
+function withTimeout(promise, ms = 45000) {
   return Promise.race([
     promise,
     new Promise((_, reject) =>
@@ -207,20 +207,41 @@ async function initApp() {
     return;
   }
   
+  // Try to restore session immediately on page load
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session) {
+      state.user = session.user;
+      await loadUserProfile();
+      logSessionLocally(session.user.id);
+      
+      DOM.authScreen.classList.remove('active');
+      DOM.appShell.classList.remove('hidden');
+      
+      await refreshAllData();
+      startSystemClock();
+    }
+  } catch (err) {
+    console.error('Initial session check error:', err);
+  }
+  
   // Track auth changes
   supabase.auth.onAuthStateChange(async (event, session) => {
     try {
       if (session) {
-        state.user = session.user;
-        await loadUserProfile();
-        logSessionLocally(session.user.id);
-        
-        DOM.authScreen.classList.remove('active');
-        DOM.appShell.classList.remove('hidden');
-        
-        // Load user database modules
-        await refreshAllData();
-        startSystemClock();
+        // Only load profile and data if the user state is not already set or it's a different user
+        if (!state.user || state.user.id !== session.user.id) {
+          state.user = session.user;
+          await loadUserProfile();
+          logSessionLocally(session.user.id);
+          
+          DOM.authScreen.classList.remove('active');
+          DOM.appShell.classList.remove('hidden');
+          
+          // Load user database modules
+          await refreshAllData();
+          startSystemClock();
+        }
       } else {
         state.user = null;
         state.profile = null;
@@ -1544,6 +1565,37 @@ function renderStopwatchLaps() {
 // Setup DOM Event Listeners & UI binders
 // ==========================================================
 function setupEventListeners() {
+  // Password Visibility Toggle (Hold to see password)
+  const passwordWrappers = document.querySelectorAll('.password-wrapper');
+  passwordWrappers.forEach(wrapper => {
+    const input = wrapper.querySelector('input');
+    const toggleBtn = wrapper.querySelector('.password-toggle-btn');
+    if (!input || !toggleBtn) return;
+
+    const showPassword = () => {
+      input.type = 'text';
+    };
+
+    const hidePassword = () => {
+      input.type = 'password';
+    };
+
+    // Desktop mouse events
+    toggleBtn.addEventListener('mousedown', showPassword);
+    toggleBtn.addEventListener('mouseup', hidePassword);
+    toggleBtn.addEventListener('mouseleave', hidePassword);
+
+    // Mobile touch events
+    toggleBtn.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      showPassword();
+    });
+    toggleBtn.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      hidePassword();
+    });
+  });
+
   // Theme Toggle
   DOM.themeToggle.addEventListener('click', () => {
     const currentTheme = document.documentElement.classList.contains('light') ? 'light' : 'dark';
